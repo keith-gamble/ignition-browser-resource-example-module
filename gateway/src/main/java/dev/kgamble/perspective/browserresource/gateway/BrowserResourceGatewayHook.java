@@ -6,6 +6,7 @@ import com.inductiveautomation.ignition.gateway.model.GatewayContext;
 import com.inductiveautomation.perspective.common.PerspectiveModule;
 import com.inductiveautomation.perspective.common.api.BrowserResource;
 import com.inductiveautomation.perspective.common.api.ComponentDescriptor;
+import com.inductiveautomation.perspective.common.api.ComponentDescriptorImpl;
 import com.inductiveautomation.perspective.common.api.ComponentRegistry;
 import com.inductiveautomation.perspective.gateway.api.PerspectiveContext;
 
@@ -22,8 +23,7 @@ public class BrowserResourceGatewayHook extends AbstractGatewayModuleHook {
     private GatewayContext context;
     private ComponentRegistry componentRegistry;
     private List<ComponentDescriptor> modifiedComponents;
-
-    private static final Set<BrowserResource> BROWSER_RESOURCES = Set.of(
+    public static final Set<BrowserResource> BROWSER_RESOURCES = Set.of(
             new BrowserResource(
                     "example-bootstrap",
                     "/res/browser-resource-example/bootstrap.js",
@@ -38,6 +38,7 @@ public class BrowserResourceGatewayHook extends AbstractGatewayModuleHook {
     @Override
     public void startup(LicenseState activationState) {
         logger.info("Starting up Browser Resource Example module.");
+
         PerspectiveContext perspectiveContext = PerspectiveContext.get(context);
         if (perspectiveContext != null) {
             this.componentRegistry = perspectiveContext.getComponentRegistry();
@@ -52,6 +53,17 @@ public class BrowserResourceGatewayHook extends AbstractGatewayModuleHook {
                             }
                             return matches;
                         });
+                
+                ComponentDescriptor fakeComponent = ComponentDescriptorImpl.ComponentBuilder.newBuilder()
+                        .setId("resource.fake.component")
+                        .setResources(BrowserResourceGatewayHook.BROWSER_RESOURCES)
+                        .build();
+                 
+                this.componentRegistry.registerComponent(fakeComponent);
+
+                this.componentRegistry.removeComponent(fakeComponent.id());
+
+
                 logger.debug("Tracked {} components for resource injection.", modifiedComponents.size());
             } else {
                 logger.warn("ComponentRegistry is null, skipping resource injection.");
@@ -68,11 +80,6 @@ public class BrowserResourceGatewayHook extends AbstractGatewayModuleHook {
             logger.debug("Removing injected resources from {} tracked components...", modifiedComponents.size());
             ComponentRegistryUtils.removeResourcesFrom(this.componentRegistry, BROWSER_RESOURCES, modifiedComponents);
         }
-    }
-
-    @Override
-    public boolean isFreeModule() {
-        return true;
     }
 
     @Override

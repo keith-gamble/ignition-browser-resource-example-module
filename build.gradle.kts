@@ -25,6 +25,7 @@ ignitionModule {
     license.set("LICENSE.txt")  // License file to include
     moduleDescription.set("A module that adds a browser resource example to Perspective.")
     requiredIgnitionVersion.set("8.1.44")  // Minimum Ignition version required
+    freeModule.set(true)  // Set to true if the module is free
 
     projectScopes.putAll(
         mapOf(
@@ -34,7 +35,11 @@ ignitionModule {
 
     // Declare dependencies on other Ignition modules
     // This module depends on Perspective in both Gateway
-    moduleDependencies.put("com.inductiveautomation.perspective", "G")
+    moduleDependencies.set(
+        mapOf(
+            "com.inductiveautomation.perspective" to "G",
+        ),
+    )
 
     // Register the module hooks that initialize the module in each scope
     hooks.putAll(

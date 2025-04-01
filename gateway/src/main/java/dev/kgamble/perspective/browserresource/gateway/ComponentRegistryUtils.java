@@ -16,13 +16,15 @@ import org.slf4j.LoggerFactory;
 
 public class ComponentRegistryUtils {
     private static final Logger logger = LoggerFactory.getLogger(ComponentRegistryUtils.class);
+    public static String TestComponentId = "ia.input.button";
+
 
     public static void addResourcesTo(ComponentRegistry registry, Set<BrowserResource> resources,
             Predicate<ComponentDescriptor> predicate) {
         for (ComponentDescriptor component : registry.get().values()) {
             if (predicate.test(component)) {
                 for (BrowserResource resource : resources) {
-                    logger.debug("Adding resource {} to component {}", resource, component);
+                    logger.debug("Adding resource {} to component {}", resource.name, component.id());
                     addBrowserResource(component, resource);
                 }
             }
@@ -33,7 +35,7 @@ public class ComponentRegistryUtils {
             List<ComponentDescriptor> components) {
         for (ComponentDescriptor component : components) {
             for (BrowserResource resource : resources) {
-                logger.debug("Removing resource {} from component {}", resource, component);
+                logger.debug("Removing resource {} from component {}", resource.name, component.id());
                 removeBrowserResource(component, resource);
             }
         }
@@ -47,7 +49,7 @@ public class ComponentRegistryUtils {
             field.setAccessible(true);
             field.set(descriptor, browserResources);
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            logger.error("Failed to add browser resource {} to descriptor {}", resource, descriptor, e);
+            logger.error("Failed to add browser resource {} to descriptor {}", resource.name, descriptor.id(), e);
             throw new RuntimeException("Failed to add browser resource", e);
         }
     }
@@ -61,7 +63,7 @@ public class ComponentRegistryUtils {
             field.setAccessible(true);
             field.set(descriptor, browserResources);
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            logger.error("Failed to remove browser resource {} from descriptor {}", resource, descriptor, e);
+            logger.error("Failed to remove browser resource {} from descriptor {}", resource.name, descriptor.id(), e);
             throw new RuntimeException("Failed to remove browser resource", e);
         }
     }
