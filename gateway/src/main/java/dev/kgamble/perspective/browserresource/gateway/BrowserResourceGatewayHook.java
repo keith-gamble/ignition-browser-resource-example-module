@@ -35,43 +35,43 @@ public class BrowserResourceGatewayHook extends AbstractGatewayModuleHook {
         this.context = context;
     }
 
-    @Override
-    public void startup(LicenseState activationState) {
-        logger.info("Starting up Browser Resource Example module.");
+@Override
+public void startup(LicenseState activationState) {
+    logger.info("Starting up Browser Resource Example module.");
 
-        PerspectiveContext perspectiveContext = PerspectiveContext.get(context);
-        if (perspectiveContext != null) {
-            this.componentRegistry = perspectiveContext.getComponentRegistry();
-            if (this.componentRegistry != null) {
-                logger.info("Injecting resources: {}", BROWSER_RESOURCES);
-                this.modifiedComponents = new ArrayList<>();
-                ComponentRegistryUtils.addResourcesTo(this.componentRegistry, BROWSER_RESOURCES,
-                        component -> {
-                            boolean matches = component.moduleId().equals(PerspectiveModule.MODULE_ID);
-                            if (matches) {
-                                modifiedComponents.add(component);
-                            }
-                            return matches;
-                        });
+    PerspectiveContext perspectiveContext = PerspectiveContext.get(context);
+    if (perspectiveContext != null) {
+        this.componentRegistry = perspectiveContext.getComponentRegistry();
+        if (this.componentRegistry != null) {
+            logger.info("Injecting resources: {}", BROWSER_RESOURCES);
+            this.modifiedComponents = new ArrayList<>();
+            ComponentRegistryUtils.addResourcesTo(this.componentRegistry, BROWSER_RESOURCES,
+                    component -> {
+                        boolean matches = component.moduleId().equals(PerspectiveModule.MODULE_ID);
+                        if (matches) {
+                            modifiedComponents.add(component);
+                        }
+                        return matches;
+                    });
+            
+            ComponentDescriptor fakeComponent = ComponentDescriptorImpl.ComponentBuilder.newBuilder()
+                    .setId("resource.fake.component")
+                    .setResources(BrowserResourceGatewayHook.BROWSER_RESOURCES)
+                    .build();
                 
-                ComponentDescriptor fakeComponent = ComponentDescriptorImpl.ComponentBuilder.newBuilder()
-                        .setId("resource.fake.component")
-                        .setResources(BrowserResourceGatewayHook.BROWSER_RESOURCES)
-                        .build();
-                 
-                this.componentRegistry.registerComponent(fakeComponent);
+            this.componentRegistry.registerComponent(fakeComponent);
 
-                this.componentRegistry.removeComponent(fakeComponent.id());
+            this.componentRegistry.removeComponent(fakeComponent.id());
 
 
-                logger.debug("Tracked {} components for resource injection.", modifiedComponents.size());
-            } else {
-                logger.warn("ComponentRegistry is null, skipping resource injection.");
-            }
+            logger.debug("Tracked {} components for resource injection.", modifiedComponents.size());
         } else {
-            logger.warn("PerspectiveContext is null, skipping resource injection.");
+            logger.warn("ComponentRegistry is null, skipping resource injection.");
         }
+    } else {
+        logger.warn("PerspectiveContext is null, skipping resource injection.");
     }
+}
 
     @Override
     public void shutdown() {
