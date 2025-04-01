@@ -1,0 +1,25 @@
+{
+	"folders": [
+    {
+      "name": "Root",
+      "path": "."
+    },
+    {
+      "name": "Gateway",
+      "path": "gateway/src/main"
+    },
+    {
+      "name": "Docker",
+      "path": "docker/temp"
+    }
+  ],
+	"settings": {
+		"java.configuration.updateBuildConfiguration": "automatic",
+		"java.compile.nullAnalysis.mode": "automatic",
+		"java.format.settings.url": ".vscode/java-formatter.xml",
+		
+		"java.import.gradle.version": "wrapper",
+		"java.import.gradle.wrapper.enabled": true,
+    "java.import.gradle.user.home": null
+	}
+}

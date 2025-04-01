@@ -1,0 +1,41 @@
+# Build outputs
+build/
+**/build/
+bin/
+**/bin/
+dist/
+**/dist/
+out/
+
+# Temporary files
+tmp_*
+temp/
+tmp/
+
+# IDE files
+.vscode/
+.idea/
+.project
+.classpath
+.settings/
+**/.project
+**/.classpath
+**/.settings/
+
+# Node/NPM
+node_modules/
+**/node_modules/
+
+# Gradle
+.gradle/
+.gradle-test-results/
+.gradle-daemon/
+gradle.properties
+
+# Python
+__pycache__/
+.pytest_cache/
+
+# Environment & System files
+.env
+.DS_Store
